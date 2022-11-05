@@ -5,6 +5,8 @@ import pdf from 'pdf-parse';
 import { v4 as uuidv4 } from 'uuid';
 import cors from "cors";
 
+const port = process.env.PORT || 80
+
 type UploadedPDF = fileUpload.UploadedFile & { mimetype: string, name: string, data: Buffer };
 
 type PDFQueue = Map<string, pdf.Result>;
@@ -52,4 +54,4 @@ app.post("/pdf", (req, res) => {
     });
 });
 
-app.listen(3001, () => console.log('server started'));
+app.listen(port, () => console.log('server started'));
