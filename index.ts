@@ -3,13 +3,14 @@ const app = express();
 import fileUpload from "express-fileupload";
 import pdf from 'pdf-parse';
 import { v4 as uuidv4 } from 'uuid';
-
+import cors from "cors";
 
 type UploadedPDF = fileUpload.UploadedFile & { mimetype: string, name: string, data: Buffer };
 
 type PDFQueue = Map<string, pdf.Result>;
 const pdfQueue: PDFQueue = new Map();
 
+app.use(cors())
 app.use(fileUpload());
 
 app.get('/pdf:id', (req, res) => {
