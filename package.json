@@ -25,6 +25,7 @@
     "uuid": "^9.0.0"
   },
   "scripts": {
-    "dev": "node --loader ts-node/esm ./index.ts"
+    "dev": "node --loader ts-node/esm ./index.ts",
+    "start": "node --loader ts-node/esm ./index.ts"
   }
 }
