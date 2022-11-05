@@ -54,4 +54,4 @@ app.post("/pdf", (req, res) => {
     });
 });
 
-app.listen(port, () => console.log('server started'));
+app.listen(process.env.PORT || 5000, () => console.log('server started'));
