@@ -31,6 +31,10 @@ app.get("/", (req, res) => {
     return;
 })
 
+app.get("/api", (req, res) => {
+    return res.status(200).send("Hello World!");
+});
+
 app.post("/pdf", (req, res) => {
     const file = req.files?.pdf as UploadedPDF;
 
