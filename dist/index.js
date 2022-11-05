@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
     return;
 });
 app.get("/api", (req, res) => {
-    return res.status(200).send("Hello World!");
+    return res.status(200).send({ message: "Hello World!" });
 });
 app.post("/pdf", (req, res) => {
     const file = req.files?.pdf;
@@ -41,8 +41,7 @@ app.post("/pdf", (req, res) => {
     pdf(file.data).then(data => {
         const id = uuidv4();
         pdfQueue.set(id, data);
-        res.status(200).send(id);
-        console.log(id);
+        res.status(200).send({ id });
         return;
     });
 });
