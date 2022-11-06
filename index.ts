@@ -28,16 +28,6 @@ app.get('/pdf/:id', (req, res) => {
     }
 });
 
-app.get("/", (req, res) => {
-    console.log("I was pinged");
-    res.status(400).send("Hello World!");
-    return;
-})
-
-app.get("/api", (req, res) => {
-    return res.status(200).send({ message: "Hello World!" });
-});
-
 app.post("/pdf", (req, res) => {
     const file = req.files?.pdf as UploadedPDF;
 
@@ -54,6 +44,8 @@ app.post("/pdf", (req, res) => {
     pdf(file.data).then(data => {
         const id = uuidv4();
         pdfQueue.set(id, data);
+        console.log("PDF uploaded");
+        console.log("Returning ID", id);
         res.status(200).send({id});
         return;
     });
