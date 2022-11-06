@@ -20,7 +20,9 @@ app.get('/pdf:id', (req, res) => {
     const pdf = pdfQueue.get(req.params.id);
     if (pdf) {
         pdfQueue.delete(req.params.id);
-        res.send(pdf);
+        console.log("Sending pdf");
+        console.log(pdf);
+        res.status(200).send(pdf);
     } else {
         res.status(404).send('Not found');
     }
