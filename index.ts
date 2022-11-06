@@ -15,7 +15,7 @@ const pdfQueue: PDFQueue = new Map();
 app.use(cors())
 app.use(fileUpload());
 
-app.get('/pdf:id', (req, res) => {
+app.get('/pdf/:id', (req, res) => {
     console.log("Getting PDF based on ID");
     const pdf = pdfQueue.get(req.params.id);
     if (pdf) {
