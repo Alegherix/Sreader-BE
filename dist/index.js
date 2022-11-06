@@ -12,6 +12,7 @@ app.get('/pdf:id', (req, res) => {
     console.log("Getting PDF based on ID");
     const pdf = pdfQueue.get(req.params.id);
     if (pdf) {
+        pdfQueue.delete(req.params.id);
         res.send(pdf);
     }
     else {
