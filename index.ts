@@ -5,24 +5,51 @@ import pdf from 'pdf-parse';
 import { v4 as uuidv4 } from 'uuid';
 import cors from "cors";
 
+
 const port = process.env.PORT || 80
+
+type PDFChunk = {
+    [key: string]: string
+}
 
 type UploadedPDF = fileUpload.UploadedFile & { mimetype: string, name: string, data: Buffer };
 
 type PDFQueue = Map<string, pdf.Result>;
 const pdfQueue: PDFQueue = new Map();
+const pdfChunkQueue: Map<string, PDFChunk> = new Map();
+
 
 app.use(cors())
 app.use(fileUpload());
 
+
+const splitText = (text: string, amount: number): PDFChunk => {
+    let chunks: PDFChunk = {};
+    text.split(' ').reduce((acc, word, index) => { 
+        const key = Math.floor(index / amount);
+        acc[key] = acc[key] ? acc[key] + ' ' + word : word;
+        return acc;
+    }, chunks);
+
+    return chunks;
+};
+
+
+
+
 app.get('/pdf/:id', (req, res) => {
-    console.log("Getting PDF based on ID");
     const pdf = pdfQueue.get(req.params.id);
-    if (pdf) {
-        pdfQueue.delete(req.params.id);
-        console.log("Sending pdf");
-        console.log(pdf);
-        res.status(200).send(pdf);
+    
+    if(pdfChunkQueue.get(req.params.id) && req.query.chunk) {
+        let chunk = req.query.chunk as string;
+        res.send({text: pdfChunkQueue.get(req.params.id)?.[chunk] ?? 'No text found'});
+    }
+    
+    else if (pdf) {
+        const chunks = splitText(pdf.text, 5000);
+        const chunksLength = Object.keys(chunks).length;
+        pdfChunkQueue.set(req.params.id, chunks);
+        res.status(200).send({pages: pdf.numpages, text: chunks[0], chunks: chunksLength});
     } else {
         res.status(404).send('Not found');
     }
@@ -43,7 +70,8 @@ app.post("/pdf", (req, res) => {
     }
     pdf(file.data).then(data => {
         const id = uuidv4();
-        pdfQueue.set(id, data);
+        // TODO - Bring back uuid again
+        pdfQueue.set("1", data);
         console.log("PDF uploaded");
         console.log("Returning ID", id);
         res.status(200).send({id});
