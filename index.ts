@@ -71,7 +71,7 @@ app.post("/pdf", (req, res) => {
     pdf(file.data).then(data => {
         const id = uuidv4();
         // TODO - Bring back uuid again
-        pdfQueue.set("1", data);
+        pdfQueue.set(id, data);
         console.log("PDF uploaded");
         console.log("Returning ID", id);
         res.status(200).send({id});
